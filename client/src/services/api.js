@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_URL = '/api'
+// Use environment variable for API URL, fallback to relative path for development
+const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 // Products API
 export const getProducts = async (params = {}) => {
