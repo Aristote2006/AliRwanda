@@ -13,6 +13,12 @@ const Navbar = () => {
   const { darkMode, toggleDarkMode } = useTheme()
   const navigate = useNavigate()
 
+  // ===== LOGO CONFIGURATION =====
+  // To change your logo, replace the image path below
+  // Logo files location: client/public/assets/images/
+  const LOGO_SRC = '/assets/images/alirwanda.jpeg' // Main logo with text
+  const LOGO_ICON_SRC = '/assets/images/alirwanda.jpeg' // Icon only (for mobile)
+
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
@@ -33,7 +39,18 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity">
+            {/* Logo Image - Change LOGO_SRC above to update */}
+            <img 
+              src={LOGO_SRC} 
+              alt="AliRwanda Logo" 
+              className="h-10 w-auto object-contain" 
+              onError={(e) => {
+                // Fallback to text if image fails to load
+                e.target.style.display = 'none'
+              }}
+            />
+            {/* Website Name */}
             <div className="text-2xl font-bold text-primary dark:text-white">
               Ali<span className="text-secondary">Rwanda</span>
             </div>

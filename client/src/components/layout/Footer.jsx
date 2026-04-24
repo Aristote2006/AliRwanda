@@ -2,13 +2,28 @@ import { Link } from 'react-router-dom'
 import { FiMail, FiPhone, FiMapPin, FiFacebook, FiTwitter, FiInstagram } from 'react-icons/fi'
 
 const Footer = () => {
+  // ===== LOGO CONFIGURATION =====
+  const LOGO_SRC = '/assets/images/alirwanda.jpeg'
+  
   return (
     <footer className="bg-primary dark:bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-2xl font-bold mb-4">
+            {/* Logo Image */}
+            <img 
+              src={LOGO_SRC} 
+              alt="AliRwanda Logo" 
+              className="h-14 w-auto mb-4 object-contain" 
+              onError={(e) => {
+                // Fallback to text if image fails
+                e.target.style.display = 'none'
+                e.target.nextSibling.style.display = 'block'
+              }}
+            />
+            {/* Fallback Text Logo */}
+            <h3 className="hidden text-2xl font-bold mb-4">
               Ali<span className="text-secondary">Rwanda</span>
             </h3>
             <p className="text-gray-300 mb-4">
