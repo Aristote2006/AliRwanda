@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
@@ -9,13 +9,27 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { login } = useAuth()
+  const { user, login } = useAuth()
   const navigate = useNavigate()
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      console.log('🔄 User already logged in, redirecting based on role:', user.role)
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true })
+      } else {
+        navigate('/', { replace: true })
+      }
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('') // Clear previous errors
+    
+    console.log('🔐 Login form submitted')
     
     // Validation
     if (!email.trim()) {
@@ -36,26 +50,25 @@ const Login = () => {
       return
     }
     
-    const success = await login(email, password)
-    
-    setLoading(false)
-    if (success) {
-      // ROLE-BASED REDIRECTION
-      // Get user info from localStorage to check role
-      const userInfo = localStorage.getItem('userInfo')
-      if (userInfo) {
-        const user = JSON.parse(userInfo)
-        if (user.role === 'admin') {
-          navigate('/admin')
-        } else {
-          navigate('/dashboard') // Regular users go to customer dashboard
-        }
+    try {
+      const success = await login(email, password)
+      
+      console.log('📋 Login result:', success)
+      
+      setLoading(false)
+      
+      if (success) {
+        // Redirect will be handled by useEffect when user state updates
+        console.log('✅ Login successful, useEffect will handle redirect')
+        // Don't navigate here - let useEffect handle it
       } else {
-        navigate('/')
+        // Error is already shown by AuthContext
+        setError('Invalid email or password. Please check your credentials and try again.')
       }
-    } else {
-      // Error is already shown by AuthContext
-      setError('Invalid email or password. Please check your credentials and try again.')
+    } catch (error) {
+      console.error('❌ Login form error:', error)
+      setLoading(false)
+      setError('An unexpected error occurred. Please try again.')
     }
   }
 
