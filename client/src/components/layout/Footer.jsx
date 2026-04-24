@@ -91,11 +91,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <FiPhone className="w-5 h-5 text-secondary" />
-                <span className="text-gray-300">+250 788 123 456</span>
+                <span className="text-gray-300">+250 784 227 283</span>
               </li>
               <li className="flex items-center space-x-3">
                 <FiMail className="w-5 h-5 text-secondary" />
-                <span className="text-gray-300">support@alirwanda.rw</span>
+                <span className="text-gray-300">alirwanda@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -103,7 +103,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © {new Date().getFullYear()} AliRwanda. All rights reserved.
+            © {new Date().getFullYear()} AliRwanda. Developed by TOTE. All rights reserved.
           </p>
         </div>
       </div>

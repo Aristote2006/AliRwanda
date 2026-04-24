@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiTrash2, FiMinus, FiPlus, FiShoppingCart } from 'react-icons/fi'
+import { FiTrash2, FiMinus, FiPlus, FiShoppingCart, FiMessageCircle } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -10,6 +10,24 @@ const Cart = () => {
   const shipping = cartItems.length > 0 ? 10 : 0
   const tax = getCartTotal() * 0.1
   const total = getCartTotal() + shipping + tax
+
+  const handleBuyNowWhatsApp = () => {
+    const phoneNumber = '+250784227283'
+    
+    let message = "Hello, I'd like to order:\n\n"
+    cartItems.forEach((item, index) => {
+      message += `${index + 1}. ${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}\n`
+    })
+    
+    message += `\nSubtotal: $${getCartTotal().toFixed(2)}`
+    message += `\nShipping: $${shipping.toFixed(2)}`
+    message += `\nTax (10%): $${tax.toFixed(2)}`
+    message += `\nTotal: $${total.toFixed(2)}`
+    message += `\n\nPlease confirm availability and delivery details. Thank you!`
+    
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -136,6 +154,14 @@ const Cart = () => {
             >
               {user ? 'Proceed to Checkout' : 'Login to Checkout'}
             </Link>
+
+            <button
+              onClick={handleBuyNowWhatsApp}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200 mt-4"
+            >
+              <FiMessageCircle className="w-5 h-5" />
+              <span>Order via WhatsApp</span>
+            </button>
 
             <Link
               to="/shop"

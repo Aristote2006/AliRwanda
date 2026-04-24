@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { FiShoppingCart, FiStar, FiHeart } from 'react-icons/fi'
 import ProductCard from '../components/products/ProductCard'
-import { getProduct, getRelatedProducts } from '../services/api'
+import { getProduct, getRelatedProducts, trackProductView } from '../services/api'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import { toast } from 'react-toastify'
 
 const ProductDetails = () => {
   const { id } = useParams()
+  const { user } = useAuth()
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -25,6 +27,11 @@ const ProductDetails = () => {
         ])
         setProduct(productData)
         setRelatedProducts(related)
+        
+        // Track product view
+        if (user) {
+          trackProductView({ productId: id }, user.token).catch(() => {})
+        }
       } catch (error) {
         console.error('Error fetching product:', error)
       } finally {
@@ -33,7 +40,7 @@ const ProductDetails = () => {
     }
 
     fetchData()
-  }, [id])
+  }, [id, user])
 
   const handleAddToCart = () => {
     addToCart(product, quantity)

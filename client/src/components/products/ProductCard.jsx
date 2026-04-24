@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiShoppingCart, FiStar } from 'react-icons/fi'
+import { FiShoppingCart, FiStar, FiMessageCircle } from 'react-icons/fi'
 import { useCart } from '../../context/CartContext'
 
 const ProductCard = ({ product }) => {
@@ -9,6 +9,19 @@ const ProductCard = ({ product }) => {
     e.preventDefault()
     e.stopPropagation()
     addToCart(product)
+  }
+
+  const handleBuyNow = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    const phoneNumber = '+250784227283'
+    const message = encodeURIComponent(
+      `Hello, I'm interested in buying: ${product.name}\nPrice: $${product.price.toFixed(2)}\nPlease let me know if we can discuss the price. Thank you!`
+    )
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
+    
+    window.open(whatsappUrl, '_blank')
   }
 
   return (
@@ -43,17 +56,29 @@ const ProductCard = ({ product }) => {
           </span>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="mb-3">
           <span className="text-2xl font-bold text-secondary">
             ${product.price.toFixed(2)}
           </span>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={handleAddToCart}
             disabled={product.countInStock === 0}
-            className="btn-primary py-2 px-4 text-sm flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary py-2 px-3 text-sm flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FiShoppingCart className="w-4 h-4" />
             <span>Add</span>
+          </button>
+          
+          <button
+            onClick={handleBuyNow}
+            disabled={product.countInStock === 0}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            <FiMessageCircle className="w-4 h-4" />
+            <span>Buy Now</span>
           </button>
         </div>
       </div>

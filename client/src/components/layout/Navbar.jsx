@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FiShoppingCart, FiUser, FiSun, FiMoon, FiMenu, FiX, FiSearch } from 'react-icons/fi'
+import { FiShoppingCart, FiUser, FiSun, FiMoon, FiMenu, FiX, FiSearch, FiSettings, FiLayout } from 'react-icons/fi'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
@@ -93,9 +93,25 @@ const Navbar = () => {
                   <span className="text-sm">{user.name}</span>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center space-x-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <FiLayout className="w-4 h-4" />
+                    <span>My Dashboard</span>
+                  </Link>
+                  {user.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center space-x-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <FiSettings className="w-4 h-4" />
+                      <span>Admin Dashboard</span>
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Logout
                   </button>
@@ -160,12 +176,30 @@ const Navbar = () => {
               {darkMode ? 'Light Mode' : 'Dark Mode'}
             </button>
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left py-2 text-gray-700 dark:text-gray-300"
-              >
-                Logout ({user.name})
-              </button>
+              <>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary"
+                >
+                  My Dashboard
+                </Link>
+                {user.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-secondary font-semibold"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left py-2 text-gray-700 dark:text-gray-300"
+                >
+                  Logout ({user.name})
+                </button>
+              </>
             ) : (
               <Link
                 to="/login"

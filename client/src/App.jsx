@@ -11,6 +11,11 @@ import Checkout from './pages/Checkout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import PrivateRoute from './components/common/PrivateRoute'
+import AdminRoute from './components/common/AdminRoute'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import ProductManagement from './pages/admin/ProductManagement'
+import ProductForm from './pages/admin/ProductForm'
+import CustomerDashboard from './pages/customer/CustomerDashboard'
 
 function App() {
   return (
@@ -30,6 +35,50 @@ function App() {
               <PrivateRoute>
                 <Checkout />
               </PrivateRoute>
+            }
+          />
+          
+          {/* Customer Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <CustomerDashboard />
+              </PrivateRoute>
+            }
+          />
+          
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <ProductManagement />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/product/new"
+            element={
+              <AdminRoute>
+                <ProductForm />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/product/:id/edit"
+            element={
+              <AdminRoute>
+                <ProductForm />
+              </AdminRoute>
             }
           />
         </Routes>

@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import upload from '../middleware/upload.js';
 
 // @desc    Get all products
 // @route   GET /api/products
@@ -89,21 +90,40 @@ const getProductById = async (req, res) => {
 // @access  Private/Admin
 const createProduct = async (req, res) => {
   try {
+    const { name, description, price, image, images, category, rating, numReviews, countInStock, isFeatured, isTrending } = req.body;
+    
+    // Handle uploaded files
+    let mainImage = image;
+    let additionalImages = images || [];
+    
+    if (req.files && req.files.length > 0) {
+      // Use first uploaded file as main image if no URL provided
+      if (!mainImage) {
+        mainImage = `/uploads/products/${req.files[0].filename}`;
+      }
+      // Add all uploaded files to additional images
+      const uploadedPaths = req.files.map(file => `/uploads/products/${file.filename}`);
+      additionalImages = [...additionalImages, ...uploadedPaths];
+    }
+    
     const product = new Product({
-      name: 'Sample name',
-      price: 0,
-      user: req.user._id,
-      image: '/images/sample.jpg',
-      category: 'Electronics',
-      countInStock: 0,
-      numReviews: 0,
-      description: 'Sample description',
+      name,
+      description,
+      price,
+      image: mainImage,
+      images: additionalImages,
+      category,
+      rating: rating || 0,
+      numReviews: numReviews || 0,
+      countInStock,
+      isFeatured: isFeatured || false,
+      isTrending: isTrending || false,
     });
 
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -112,18 +132,36 @@ const createProduct = async (req, res) => {
 // @access  Private/Admin
 const updateProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category, countInStock } =
-      req.body;
+    const { name, price, description, image, images, category, countInStock, rating, numReviews, isFeatured, isTrending } = req.body;
 
     const product = await Product.findById(req.params.id);
 
     if (product) {
+      // Handle uploaded files
+      let mainImage = image || product.image;
+      let additionalImages = images || product.images;
+      
+      if (req.files && req.files.length > 0) {
+        // Use first uploaded file as main image if no URL provided
+        if (!image) {
+          mainImage = `/uploads/products/${req.files[0].filename}`;
+        }
+        // Add all uploaded files to additional images
+        const uploadedPaths = req.files.map(file => `/uploads/products/${file.filename}`);
+        additionalImages = [...additionalImages, ...uploadedPaths];
+      }
+      
       product.name = name || product.name;
       product.price = price || product.price;
       product.description = description || product.description;
-      product.image = image || product.image;
+      product.image = mainImage;
+      product.images = additionalImages;
       product.category = category || product.category;
       product.countInStock = countInStock || product.countInStock;
+      product.rating = rating !== undefined ? rating : product.rating;
+      product.numReviews = numReviews !== undefined ? numReviews : product.numReviews;
+      product.isFeatured = isFeatured !== undefined ? isFeatured : product.isFeatured;
+      product.isTrending = isTrending !== undefined ? isTrending : product.isTrending;
 
       const updatedProduct = await product.save();
       res.json(updatedProduct);
@@ -131,7 +169,7 @@ const updateProduct = async (req, res) => {
       res.status(404).json({ message: 'Product not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -213,6 +251,45 @@ const getRelatedProducts = async (req, res) => {
   }
 };
 
+// @desc    Get all categories
+// @route   GET /api/products/categories
+// @access  Public
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Product.distinct('category');
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get product statistics
+// @route   GET /api/products/stats
+// @access  Private/Admin
+const getProductStats = async (req, res) => {
+  try {
+    const totalProducts = await Product.countDocuments();
+    const categories = await Product.distinct('category');
+    const categoryStats = await Product.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } }
+    ]);
+    const lowStock = await Product.find({ countInStock: { $lte: 5 } }).countDocuments();
+    const featured = await Product.find({ isFeatured: true }).countDocuments();
+    const trending = await Product.find({ isTrending: true }).countDocuments();
+    
+    res.json({ 
+      totalProducts, 
+      categories, 
+      categoryStats, 
+      lowStock, 
+      featured, 
+      trending 
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   getProducts,
   getProductById,
@@ -223,4 +300,6 @@ export {
   getFeaturedProducts,
   getTrendingProducts,
   getRelatedProducts,
+  getCategories,
+  getProductStats,
 };

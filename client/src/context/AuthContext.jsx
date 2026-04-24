@@ -34,11 +34,32 @@ export const AuthProvider = ({ children }) => {
       
       setUser(data)
       localStorage.setItem('userInfo', JSON.stringify(data))
-      toast.success('Login successful!')
+      
+      // Show role-specific success message
+      if (data.role === 'admin') {
+        toast.success('✅ Admin login successful! Redirecting to dashboard...')
+      } else {
+        toast.success('✅ Login successful! Redirecting to your dashboard...')
+      }
+      
       return true
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed'
-      toast.error(message)
+      const statusCode = error.response?.status
+      const message = error.response?.data?.message
+      
+      // Better error messages based on status code
+      if (statusCode === 401) {
+        toast.error('❌ Invalid email or password. Please check your credentials and try again.')
+      } else if (statusCode === 403) {
+        toast.error('❌ Your account has been deactivated. Please contact support.')
+      } else if (statusCode === 404) {
+        toast.error('❌ No account found with this email. Please register first.')
+      } else if (!error.response) {
+        toast.error('❌ Cannot connect to server. Please check your internet connection.')
+      } else {
+        toast.error(`❌ ${message || 'Login failed. Please try again.'}`)
+      }
+      
       return false
     }
   }

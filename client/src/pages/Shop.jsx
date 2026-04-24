@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FiFilter, FiGrid, FiList } from 'react-icons/fi'
 import ProductCard from '../components/products/ProductCard'
-import { getProducts } from '../services/api'
+import { getProducts, trackSearch, trackCategoryView, trackFilter } from '../services/api'
+import { useAuth } from '../context/AuthContext'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { user } = useAuth()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -41,6 +43,16 @@ const Shop = () => {
         const data = await getProducts(params)
         setProducts(data.products)
         setTotalPages(data.pages)
+        
+        // Track user behavior
+        if (user) {
+          if (search) {
+            trackSearch({ query: search, resultsCount: data.products.length }, user.token).catch(() => {})
+          }
+          if (category !== 'All') {
+            trackCategoryView({ category }, user.token).catch(() => {})
+          }
+        }
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -49,7 +61,7 @@ const Shop = () => {
     }
 
     fetchProducts()
-  }, [page, category, search, minPrice, maxPrice, rating, sort])
+  }, [page, category, search, minPrice, maxPrice, rating, sort, user])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -59,6 +71,12 @@ const Shop = () => {
 
   const handleFilterChange = (filterType, value) => {
     setPage(1)
+    
+    // Track filter usage
+    if (user && value) {
+      trackFilter({ filterType, filterValue: value }, user.token).catch(() => {})
+    }
+    
     switch (filterType) {
       case 'category':
         setCategory(value)
