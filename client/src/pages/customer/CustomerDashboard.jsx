@@ -237,7 +237,7 @@ const CustomerDashboard = () => {
                   {item.product?.name}
                 </p>
                 <p className="text-sm text-secondary font-bold">
-                  ${item.product?.price?.toFixed(2)}
+                  RWF {item.product?.price?.toLocaleString()}
                 </p>
               </Link>
             ))}

@@ -234,7 +234,7 @@ const Checkout = () => {
                     <p className="text-gray-500 text-sm">Qty: {item.qty}</p>
                   </div>
                   <p className="font-semibold">
-                    ${(item.price * item.qty).toFixed(2)}
+                    RWF {(item.price * item.qty).toLocaleString()}
                   </p>
                 </div>
               ))}
@@ -246,18 +246,18 @@ const Checkout = () => {
                   Subtotal
                 </span>
                 <span className="font-semibold">
-                  ${getCartTotal().toFixed(2)}
+                  RWF {getCartTotal().toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">
                   Shipping
                 </span>
-                <span className="font-semibold">${shipping.toFixed(2)}</span>
+                <span className="font-semibold">RWF {shipping.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Tax (10%)</span>
-                <span className="font-semibold">${tax.toFixed(2)}</span>
+                <span className="font-semibold">RWF {tax.toLocaleString()}</span>
               </div>
               <div className="border-t pt-3">
                 <div className="flex justify-between">
@@ -265,7 +265,7 @@ const Checkout = () => {
                     Total
                   </span>
                   <span className="text-xl font-bold text-secondary">
-                    ${total.toFixed(2)}
+                    RWF {total.toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -16,13 +16,13 @@ const Cart = () => {
     
     let message = "Hello, I'd like to order:\n\n"
     cartItems.forEach((item, index) => {
-      message += `${index + 1}. ${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}\n`
+      message += `${index + 1}. ${item.name} x${item.qty} - RWF ${(item.price * item.qty).toLocaleString()}\n`
     })
     
-    message += `\nSubtotal: $${getCartTotal().toFixed(2)}`
-    message += `\nShipping: $${shipping.toFixed(2)}`
-    message += `\nTax (10%): $${tax.toFixed(2)}`
-    message += `\nTotal: $${total.toFixed(2)}`
+    message += `\nSubtotal: RWF ${getCartTotal().toLocaleString()}`
+    message += `\nShipping: RWF ${shipping.toLocaleString()}`
+    message += `\nTax (10%): RWF ${tax.toLocaleString()}`
+    message += `\nTotal: RWF ${total.toLocaleString()}`
     message += `\n\nPlease confirm availability and delivery details. Thank you!`
     
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
@@ -75,7 +75,7 @@ const Cart = () => {
                   </Link>
                   <p className="text-gray-500 text-sm mt-1">{item.category}</p>
                   <p className="text-2xl font-bold text-secondary mt-2">
-                    ${item.price.toFixed(2)}
+                    RWF {item.price.toLocaleString()}
                   </p>
                 </div>
 
@@ -123,18 +123,18 @@ const Cart = () => {
                   Subtotal
                 </span>
                 <span className="font-semibold">
-                  ${getCartTotal().toFixed(2)}
+                  RWF {getCartTotal().toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">
                   Shipping
                 </span>
-                <span className="font-semibold">${shipping.toFixed(2)}</span>
+                <span className="font-semibold">RWF {shipping.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Tax (10%)</span>
-                <span className="font-semibold">${tax.toFixed(2)}</span>
+                <span className="font-semibold">RWF {tax.toLocaleString()}</span>
               </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between">
@@ -142,7 +142,7 @@ const Cart = () => {
                     Total
                   </span>
                   <span className="text-xl font-bold text-secondary">
-                    ${total.toFixed(2)}
+                    RWF {total.toLocaleString()}
                   </span>
                 </div>
               </div>

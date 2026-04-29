@@ -264,7 +264,7 @@ const AdminDashboard = () => {
                         </div>
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{product.category}</td>
-                      <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">${product.price}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">RWF {product.price.toLocaleString()}</td>
                       <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{product.countInStock}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

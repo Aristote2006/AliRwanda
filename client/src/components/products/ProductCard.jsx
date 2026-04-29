@@ -17,7 +17,7 @@ const ProductCard = ({ product }) => {
     
     const phoneNumber = '+250784227283'
     const message = encodeURIComponent(
-      `Hello, I'm interested in buying: ${product.name}\nPrice: $${product.price.toFixed(2)}\nPlease let me know if we can discuss the price. Thank you!`
+      `Hello, I'm interested in buying: ${product.name}\nPrice: RWF ${product.price.toLocaleString()}\nPlease let me know if we can discuss the price. Thank you!`
     )
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
     
@@ -58,7 +58,7 @@ const ProductCard = ({ product }) => {
 
         <div className="mb-3">
           <span className="text-2xl font-bold text-secondary">
-            ${product.price.toFixed(2)}
+            RWF {product.price.toLocaleString()}
           </span>
         </div>
         

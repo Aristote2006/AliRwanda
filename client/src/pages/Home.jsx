@@ -41,22 +41,28 @@ const Home = () => {
 
   const testimonials = [
     {
-      name: 'Jean Pierre',
+      name: 'Divine',
       role: 'Regular Customer',
       content: 'AliRwanda has transformed my shopping experience. Fast delivery and quality products!',
       rating: 5,
+      // TODO: Replace with direct image URL (must end with .jpg, .png, etc)
+      // Upload to: https://imgur.com/upload or save to client/public/assets/images/testimonials/
+      image: 'https://i.imgur.com/PQqshQy.jpeg',
     },
     {
-      name: 'Marie Claire',
+      name: 'Samuel',
       role: 'Verified Buyer',
       content: 'Amazing customer service and great product selection. Highly recommended!',
       rating: 5,
+      image: 'https://i.imgur.com/MlA4j50.png',
     },
     {
-      name: 'Emmanuel',
+      name: 'Aristotle',
       role: 'Tech Enthusiast',
       content: 'Best electronics store in Rwanda. Competitive prices and authentic products.',
       rating: 5,
+      // TODO: Replace with direct image URL
+      image: 'https://i.imgur.com/v8NQley.jpeg',
     },
   ]
 
@@ -79,17 +85,17 @@ const Home = () => {
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-r from-secondary to-accent animate-pulse"></div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative z-10">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
                 Shop Smart, <br />
                 <span className="text-secondary">Live Better</span>
               </h1>
-              <p className="text-xl mb-8 text-gray-200">
+              <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-gray-200">
                 Discover amazing products at unbeatable prices. Rwanda's premier online shopping destination.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
                 <Link to="/shop" className="btn-primary text-center">
                   Shop Now
                 </Link>
@@ -110,10 +116,10 @@ const Home = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-12 sm:py-16 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="section-title text-center">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
             {categories.map((category) => (
               <Link
                 key={category.name}
@@ -124,12 +130,12 @@ const Home = () => {
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-40 object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-32 sm:h-40 object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 className="text-white font-semibold text-lg">{category.name}</h3>
-                    <p className="text-gray-200 text-sm">{category.count} items</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                    <h3 className="text-white font-semibold text-sm sm:text-lg">{category.name}</h3>
+                    <p className="text-gray-200 text-xs sm:text-sm">{category.count} items</p>
                   </div>
                 </div>
               </Link>
@@ -139,16 +145,16 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-background dark:bg-gray-900">
+      <section className="py-12 sm:py-16 bg-background dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
             <h2 className="section-title mb-0">Featured Products</h2>
             <Link to="/shop" className="text-secondary hover:text-orange-600 font-semibold flex items-center space-x-2">
               <span>View All</span>
               <FiArrowRight />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
@@ -157,16 +163,16 @@ const Home = () => {
       </section>
 
       {/* Trending Products */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-12 sm:py-16 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
             <h2 className="section-title mb-0">Trending Now</h2>
             <Link to="/shop" className="text-secondary hover:text-orange-600 font-semibold flex items-center space-x-2">
               <span>View All</span>
               <FiArrowRight />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {trendingProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
@@ -175,21 +181,41 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-background dark:bg-gray-900">
+      <section className="py-12 sm:py-16 bg-background dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="section-title text-center">What Our Customers Say</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="card p-6">
-                <div className="flex items-center mb-4">
+              <div key={index} className="card p-6 lg:p-8 flex flex-col">
+                {/* Image */}
+                <div className="flex-shrink-0 mb-4">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-20 h-20 rounded-full object-cover border-4 border-secondary/20 dark:border-secondary/30 shadow-md"
+                  />
+                </div>
+                
+                {/* Name */}
+                <h3 className="text-lg font-bold text-primary dark:text-white mb-1">
+                  {testimonial.name}
+                </h3>
+                
+                {/* Role */}
+                <p className="text-sm font-medium text-secondary mb-4">
+                  {testimonial.role}
+                </p>
+                
+                {/* Content */}
+                <p className="text-gray-600 dark:text-gray-300 mb-4 italic leading-relaxed flex-grow">
+                  "{testimonial.content}"
+                </p>
+                
+                {/* Ratings */}
+                <div className="flex items-center gap-1 pt-4 border-t border-gray-200 dark:border-gray-700">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <FiStar key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 italic">"{testimonial.content}"</p>
-                <div>
-                  <p className="font-semibold text-primary dark:text-white">{testimonial.name}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
                 </div>
               </div>
             ))}
@@ -198,14 +224,14 @@ const Home = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-primary dark:bg-gray-800 text-white">
+      <section className="py-12 sm:py-16 bg-primary dark:bg-gray-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
-            <p className="text-gray-300 mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Stay Updated</h2>
+            <p className="text-sm sm:text-base text-gray-300 mb-6 sm:mb-8">
               Subscribe to our newsletter for exclusive deals and new arrivals
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto flex gap-4">
+            <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto flex flex-col sm:flex-row gap-3 sm:gap-4">
               <input
                 type="email"
                 value={email}

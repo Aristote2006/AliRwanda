@@ -134,7 +134,7 @@ const ProductDetails = () => {
           </div>
 
           <p className="text-4xl font-bold text-secondary mb-6">
-            ${product.price.toFixed(2)}
+            RWF {product.price.toLocaleString()}
           </p>
 
           <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">

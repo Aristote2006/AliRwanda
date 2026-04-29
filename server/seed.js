@@ -13,7 +13,7 @@ const products = [
   {
     name: 'iPhone 15 Pro Max',
     description: 'The latest iPhone with A17 Pro chip, titanium design, and advanced camera system. Features a 6.7-inch Super Retina XDR display with ProMotion technology.',
-    price: 1299.99,
+    price: 150000,
     image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500',
     images: [
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500',
