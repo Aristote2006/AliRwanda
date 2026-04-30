@@ -37,11 +37,11 @@
 2. **Set environment variables on Render**:
    ```
    PORT=5000
-   MONGODB_URI=mongodb+srv://AliRwanda:AliRwanda12345@cluster0.kk6f8.mongodb.net/?appName=Cluster0
-   JWT_SECRET=alirwanda_secret_key_2024_super_secure
-   JWT_EXPIRE=7d
+   MONGODB_URI=mongodb+srv://<db username>:<db password>@appname.kk6f8.mongodb.net/?appName=Cluster0
+   JWT_SECRET=
+   JWT_EXPIRE=
    NODE_ENV=production
-   FRONTEND_URL=https://alirwanda.onrender.com
+   FRONTEND_URL=
    ```
 
 3. **Update frontend environment**:

@@ -7,7 +7,7 @@ const ContactBar = () => {
     phone1: '+250 784 227 283',
     phone2: '+250 795 425 354',
     whatsapp: '+250 784 227 283',
-    email: 'alirwanda@gmail.com',
+    email: 'alirwandaofficial@gmail.com',
   }
 
   const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp.replace(/[^0-9]/g, '')}`
