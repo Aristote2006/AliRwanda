@@ -11,6 +11,7 @@ import {
   getRelatedProducts,
   getCategories,
   getProductStats,
+  getCategoriesWithCounts,
 } from '../controllers/productController.js';
 import { protect, admin } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
@@ -23,6 +24,7 @@ router.route('/featured').get(getFeaturedProducts);
 router.route('/trending').get(getTrendingProducts);
 router.route('/related/:id').get(getRelatedProducts);
 router.route('/categories').get(getCategories);
+router.route('/categories-with-counts').get(getCategoriesWithCounts);
 router.route('/stats').get(protect, admin, getProductStats);
 
 router

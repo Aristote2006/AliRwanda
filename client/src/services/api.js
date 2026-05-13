@@ -188,6 +188,11 @@ export const getCategories = async () => {
   return data
 }
 
+export const getCategoriesWithCounts = async () => {
+  const { data } = await apiClient.get('/products/categories-with-counts')
+  return data
+}
+
 // User Behavior Tracking API
 export const trackSearch = async (searchData, token) => {
   const { data } = await apiClient.post('/user/track/search', searchData, {

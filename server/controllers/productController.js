@@ -256,8 +256,9 @@ const getRelatedProducts = async (req, res) => {
 // @access  Public
 const getCategories = async (req, res) => {
   try {
-    const categories = await Product.distinct('category');
-    res.json(categories);
+    // Return all categories from the schema enum, not just distinct ones
+    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty'];
+    res.json(allCategories);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -290,6 +291,42 @@ const getProductStats = async (req, res) => {
   }
 };
 
+// @desc    Get categories with counts and images
+// @route   GET /api/products/categories-with-counts
+// @access  Public
+const getCategoriesWithCounts = async (req, res) => {
+  try {
+    const categoryImages = {
+      'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400',
+      'Fashion': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400',
+      'Home': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400',
+      'Sports': 'https://i.imgur.com/KehR0BA.jpeg',
+      'Books': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400',
+      'Beauty': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400',
+    };
+
+    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty'];
+    const categoryStats = await Product.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } }
+    ]);
+
+    const countMap = {};
+    categoryStats.forEach(stat => {
+      countMap[stat._id] = stat.count;
+    });
+
+    const categoriesWithCounts = allCategories.map(category => ({
+      name: category,
+      count: countMap[category] || 0,
+      image: categoryImages[category] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400'
+    }));
+
+    res.json(categoriesWithCounts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   getProducts,
   getProductById,
@@ -302,4 +339,5 @@ export {
   getRelatedProducts,
   getCategories,
   getProductStats,
+  getCategoriesWithCounts,
 };

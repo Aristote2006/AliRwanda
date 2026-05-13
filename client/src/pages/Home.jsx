@@ -2,24 +2,27 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowRight, FiStar, FiMail } from 'react-icons/fi'
 import ProductCard from '../components/products/ProductCard'
-import { getFeaturedProducts, getTrendingProducts } from '../services/api'
+import { getFeaturedProducts, getTrendingProducts, getCategoriesWithCounts } from '../services/api'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [trendingProducts, setTrendingProducts] = useState([])
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [featured, trending] = await Promise.all([
+        const [featured, trending, categoriesData] = await Promise.all([
           getFeaturedProducts(),
           getTrendingProducts(),
+          getCategoriesWithCounts(),
         ])
         setFeaturedProducts(featured)
         setTrendingProducts(trending)
+        setCategories(categoriesData)
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -29,15 +32,6 @@ const Home = () => {
 
     fetchData()
   }, [])
-
-  const categories = [
-    { name: 'Electronics', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', count: 120 },
-    { name: 'Fashion', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400', count: 85 },
-    { name: 'Home', image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400', count: 64 },
-    { name: 'Sports', image: 'https://images.unsplash.com/photo-1517649763962-0c623066013c?w=400', count: 42 },
-    { name: 'Books', image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400', count: 56 },
-    { name: 'Beauty', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400', count: 38 },
-  ]
 
   const testimonials = [
     {
@@ -62,7 +56,7 @@ const Home = () => {
       content: 'Best electronics store in Rwanda. Competitive prices and authentic products.',
       rating: 5,
       // TODO: Replace with direct image URL
-      image: 'https://i.imgur.com/v8NQley.jpeg',
+      image: 'https://i.imgur.com/70Z9keW.png',
     },
   ]
 

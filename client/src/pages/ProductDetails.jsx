@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { FiShoppingCart, FiStar, FiHeart } from 'react-icons/fi'
+import { FiShoppingCart, FiStar, FiHeart, FiX, FiMaximize, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import ProductCard from '../components/products/ProductCard'
 import { getProduct, getRelatedProducts, trackProductView } from '../services/api'
 import { useCart } from '../context/CartContext'
@@ -16,6 +16,8 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalImageIndex, setModalImageIndex] = useState(0)
   const { addToCart } = useCart()
 
   useEffect(() => {
@@ -44,6 +46,25 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart(product, quantity)
+  }
+
+  const openImageModal = (index) => {
+    setModalImageIndex(index)
+    setIsModalOpen(true)
+    document.body.style.overflow = 'hidden'
+  }
+
+  const closeImageModal = () => {
+    setIsModalOpen(false)
+    document.body.style.overflow = 'unset'
+  }
+
+  const handleNextImage = () => {
+    setModalImageIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const handlePrevImage = () => {
+    setModalImageIndex((prev) => (prev - 1 + images.length) % images.length)
   }
 
   if (loading) {
@@ -81,12 +102,20 @@ const ProductDetails = () => {
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         {/* Image Gallery */}
         <div>
-          <div className="card overflow-hidden mb-4">
+          <div className="card overflow-hidden mb-4 relative group">
             <img
               src={images[selectedImage]}
               alt={product.name}
-              className="w-full h-96 object-cover"
+              className="w-full h-96 object-cover cursor-pointer"
+              onClick={() => openImageModal(selectedImage)}
             />
+            <button
+              onClick={() => openImageModal(selectedImage)}
+              className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              title="View full size"
+            >
+              <FiMaximize className="w-5 h-5" />
+            </button>
           </div>
           {images.length > 1 && (
             <div className="grid grid-cols-4 gap-4">
@@ -216,6 +245,56 @@ const ProductDetails = () => {
               <ProductCard key={relatedProduct._id} product={relatedProduct} />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Full-size Image Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+          <button
+            onClick={closeImageModal}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          >
+            <FiX className="w-8 h-8" />
+          </button>
+
+          <button
+            onClick={handlePrevImage}
+            className="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
+            disabled={images.length <= 1}
+          >
+            <FiChevronLeft className="w-8 h-8" />
+          </button>
+
+          <div className="relative max-w-full max-h-full">
+            <img
+              src={images[modalImageIndex]}
+              alt={`${product.name} - Full size`}
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+          </div>
+
+          <button
+            onClick={handleNextImage}
+            className="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
+            disabled={images.length <= 1}
+          >
+            <FiChevronRight className="w-8 h-8" />
+          </button>
+
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setModalImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    modalImageIndex === index ? 'bg-white' : 'bg-gray-500'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
