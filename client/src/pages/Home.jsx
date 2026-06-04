@@ -83,7 +83,7 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="text-center md:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                Shop Smart, <br />
+                Browse Products, <br />
                 <span className="text-secondary">Live Better</span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-gray-200">
@@ -91,7 +91,7 @@ const Home = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
                 <Link to="/shop" className="btn-primary text-center">
-                  Shop Now
+                  Browse Products
                 </Link>
                 <Link to="/shop" className="btn-outline text-center">
                   View Categories
@@ -112,7 +112,7 @@ const Home = () => {
       {/* Categories Section */}
       <section className="py-12 sm:py-16 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="section-title text-center">Shop by Category</h2>
+          <h2 className="section-title text-center">Products by Category</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
             {categories.map((category) => (
               <Link

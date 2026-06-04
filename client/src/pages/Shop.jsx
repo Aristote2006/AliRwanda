@@ -31,7 +31,7 @@ const Shop = () => {
       setLoading(true)
       try {
         const params = {
-          page,
+          pageNumber: page,
           category: category !== 'All' ? category : undefined,
           search: search || undefined,
           minPrice: minPrice || undefined,
@@ -114,7 +114,7 @@ const Shop = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-primary dark:text-white mb-4">Shop</h1>
+        <h1 className="text-4xl font-bold text-primary dark:text-white mb-4">Products</h1>
         
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="mb-6">

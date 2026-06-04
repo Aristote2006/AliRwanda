@@ -327,6 +327,84 @@ const getCategoriesWithCounts = async (req, res) => {
   }
 };
 
+// @desc    Generate dynamic sitemap
+// @route   GET /api/sitemap
+// @access  Public
+const generateSitemap = async (req, res) => {
+  try {
+    const baseUrl = 'https://alirwanda.com';
+    
+    // Generate XML sitemap
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Products Page -->
+  <url>
+    <loc>${baseUrl}/shop</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Cart Page -->
+  <url>
+    <loc>${baseUrl}/cart</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- Login Page -->
+  <url>
+    <loc>${baseUrl}/login</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Register Page -->
+  <url>
+    <loc>${baseUrl}/register</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- About Us Page -->
+  <url>
+    <loc>${baseUrl}/about</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Contact Us Page -->
+  <url>
+    <loc>${baseUrl}/contact</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Product Details Page Pattern -->
+  <!-- Note: Individual product pages are dynamically generated at /product/:id -->
+  <!-- Search engines will discover these through internal links from the products page -->
+</urlset>`;
+
+    res.set('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   getProducts,
   getProductById,
@@ -340,4 +418,5 @@ export {
   getCategories,
   getProductStats,
   getCategoriesWithCounts,
+  generateSitemap,
 };

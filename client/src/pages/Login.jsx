@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
+import { GoogleLogin } from '@react-oauth/google'
+import { FcGoogle } from 'react-icons/fc'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -9,7 +11,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { user, login } = useAuth()
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const { user, login, googleLogin } = useAuth()
   const navigate = useNavigate()
 
   // Redirect if user is already logged in
@@ -69,6 +72,25 @@ const Login = () => {
       console.error('❌ Login form error:', error)
       setLoading(false)
       setError('An unexpected error occurred. Please try again.')
+    }
+  }
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    setGoogleLoading(true)
+    setError('')
+    
+    try {
+      const success = await googleLogin(credentialResponse.credential)
+      
+      if (success) {
+        // Redirect will be handled by useEffect when user state updates
+        console.log('✅ Google login successful, useEffect will handle redirect')
+      }
+    } catch (error) {
+      console.error('❌ Google login form error:', error)
+      setError('Google authentication failed. Please try again.')
+    } finally {
+      setGoogleLoading(false)
     }
   }
 
@@ -151,6 +173,35 @@ const Login = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          {/* Google Login Button */}
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={() => {
+                setError('Google authentication failed. Please try again.')
+              }}
+              useOneTap
+              text="continue_with"
+              locale="en"
+              shape="pill"
+              theme="outline"
+              size="large"
+              disabled={googleLoading}
+            />
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600 dark:text-gray-300">

@@ -106,6 +106,12 @@ export const getUserProfile = async (token) => {
   return data
 }
 
+// Google OAuth API
+export const googleAuth = async (token) => {
+  const { data } = await apiClient.post('/users/google', { token })
+  return data
+}
+
 // Orders API
 export const createOrder = async (orderData, token) => {
   const { data } = await apiClient.post('/orders', orderData, {

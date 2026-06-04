@@ -4,6 +4,7 @@ import {
   loginUser,
   getUserProfile,
   updateUserProfile,
+  googleAuth,
 } from '../controllers/userController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
+router.route('/google').post(googleAuth);
 router
   .route('/profile')
   .get(protect, getUserProfile)

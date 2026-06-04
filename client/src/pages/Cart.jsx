@@ -37,10 +37,10 @@ const Cart = () => {
           Your cart is empty
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-8">
-          Start shopping to add items to your cart
+          Start browsing to add items to your cart
         </p>
         <Link to="/shop" className="btn-primary">
-          Continue Shopping
+          Continue Browsing
         </Link>
       </div>
     )
@@ -167,7 +167,7 @@ const Cart = () => {
               to="/shop"
               className="btn-outline w-full text-center block mt-4"
             >
-              Continue Shopping
+              Continue Browsing
             </Link>
           </div>
         </div>

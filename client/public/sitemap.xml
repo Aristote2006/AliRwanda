@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  NOTE: This sitemap is now generated dynamically from the database.
+  The dynamic sitemap endpoint is available at: https://alirwanda.com/sitemap.xml
+  It automatically includes all products from the database with their last modified dates.
+  
+  This static file is kept as a fallback reference.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage - Highest Priority -->
   <url>
@@ -8,7 +15,7 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- Shop Page - Medium Priority -->
+  <!-- Products Page - Medium Priority -->
   <url>
     <loc>https://alirwanda.com/shop</loc>
     <lastmod>2026-06-04</lastmod>
@@ -40,17 +47,19 @@
     <priority>0.3</priority>
   </url>
 
-  <!-- 
-    NOTE: Product pages (/product/:id) are dynamic and should be generated 
-    from the database. For a production system, implement a dynamic sitemap 
-    generator that fetches all products from the database and adds them to 
-    the sitemap. Example format:
-    
-    <url>
-      <loc>https://alirwanda.com/product/PRODUCT_ID</loc>
-      <lastmod>PRODUCT_UPDATED_DATE</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.7</priority>
-    </url>
-  -->
+  <!-- About Us Page - Medium Priority -->
+  <url>
+    <loc>https://alirwanda.com/about</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Contact Us Page - Medium Priority -->
+  <url>
+    <loc>https://alirwanda.com/contact</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

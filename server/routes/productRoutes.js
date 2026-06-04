@@ -12,6 +12,7 @@ import {
   getCategories,
   getProductStats,
   getCategoriesWithCounts,
+  generateSitemap,
 } from '../controllers/productController.js';
 import { protect, admin } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { OAuth2Client } from 'google-auth-library';
 
 // Generate JWT with role information
 const generateToken = (id, role) => {
@@ -7,6 +8,9 @@ const generateToken = (id, role) => {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
+
+// Google OAuth2 Client
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -169,9 +173,104 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Google OAuth Login/Register
+// @route   POST /api/users/google
+// @access  Public
+const googleAuth = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // SECURITY: Validate token presence
+    if (!token) {
+      return res.status(400).json({ message: 'Google token is required' });
+    }
+
+    // Verify Google token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture } = payload;
+
+    // SECURITY: Validate required fields from Google
+    if (!email || !googleId) {
+      return res.status(400).json({ message: 'Invalid Google token payload' });
+    }
+
+    // Check if user exists by email
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // SECURITY: If user exists, check if they're using Google auth
+      if (user.authProvider === 'google' || !user.authProvider) {
+        // Update googleId if not set
+        if (!user.googleId) {
+          user.googleId = googleId;
+          user.authProvider = 'google';
+        }
+        
+        // Update profile picture if available
+        if (picture && !user.picture) {
+          user.picture = picture;
+        }
+
+        await user.save();
+      } else {
+        // User exists with local auth, link Google account
+        user.googleId = googleId;
+        user.authProvider = 'local'; // Keep local as primary auth
+        await user.save();
+      }
+    } else {
+      // SECURITY: Create new user with Google auth
+      // CRITICAL: Always set role to 'user' - NEVER allow admin creation via Google
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        googleId,
+        authProvider: 'google',
+        role: 'user', // Hardcoded - cannot be changed by Google auth
+        password: Math.random().toString(36).slice(-8), // Random password for Google users
+        picture,
+      });
+    }
+
+    // SECURITY: Check if user account is active
+    if (!user.isActive) {
+      return res.status(403).json({ 
+        message: 'Your account has been deactivated. Please contact support.' 
+      });
+    }
+
+    // Generate JWT
+    const token_jwt = generateToken(user._id, user.role);
+
+    // SECURITY: Return user info WITHOUT password
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      picture: user.picture,
+      googleId: user.googleId,
+      authProvider: user.authProvider,
+      token: token_jwt,
+    });
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    if (error.message === 'Invalid token') {
+      return res.status(401).json({ message: 'Invalid Google token' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
+  googleAuth,
 };

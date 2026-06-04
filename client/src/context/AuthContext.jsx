@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react'
-import { login as loginApi, register as registerApi } from '../services/api'
+import { login as loginApi, register as registerApi, googleAuth as googleAuthApi } from '../services/api'
 import { toast } from 'react-toastify'
 
 const AuthContext = createContext()
@@ -107,8 +107,54 @@ export const AuthProvider = ({ children }) => {
     toast.info('Logged out successfully')
   }
 
+  const googleLogin = async (googleToken) => {
+    try {
+      console.log('🔐 Attempting Google login')
+      
+      // Use the Google Auth API
+      const data = await googleAuthApi(googleToken)
+      
+      console.log('✅ Google Auth response received:', data)
+      console.log('📋 User role:', data.role)
+      console.log('🔑 Token exists:', !!data.token)
+      
+      // Store complete user data including token
+      setUser(data)
+      localStorage.setItem('userInfo', JSON.stringify(data))
+      
+      // Show role-specific success message
+      if (data.role === 'admin') {
+        toast.success('✅ Admin login successful! Redirecting to dashboard...')
+      } else {
+        toast.success('✅ Login successful! Redirecting to your dashboard...')
+      }
+      
+      return true
+    } catch (error) {
+      console.error('❌ Google Auth error:', error)
+      console.error('📋 Error response:', error.response?.data)
+      console.error('📋 Error status:', error.response?.status)
+      
+      const statusCode = error.response?.status
+      const message = error.response?.data?.message
+      
+      // Better error messages based on status code
+      if (statusCode === 401) {
+        toast.error('❌ Invalid Google token. Please try again.')
+      } else if (statusCode === 403) {
+        toast.error('❌ Your account has been deactivated. Please contact support.')
+      } else if (!error.response) {
+        toast.error('❌ Cannot connect to server. Please check your internet connection.')
+      } else {
+        toast.error(`❌ ${message || 'Google authentication failed. Please try again.'}`)
+      }
+      
+      return false
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, googleLogin, loading }}>
       {children}
     </AuthContext.Provider>
   )

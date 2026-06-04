@@ -22,6 +22,7 @@ import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userBehaviorRoutes from './routes/userBehaviorRoutes.js';
+import { generateSitemap } from './controllers/productController.js';
 
 const app = express();
 
@@ -74,6 +75,9 @@ app.use('/api/user', userBehaviorRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'AliRwanda API is running' });
 });
+
+// Dynamic sitemap endpoint
+app.get('/sitemap.xml', generateSitemap);
 
 // Error handler
 app.use(errorHandler);

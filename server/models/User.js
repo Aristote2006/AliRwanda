@@ -21,7 +21,7 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
+      required: false, // Made optional for Google OAuth users
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Never return password in queries by default
     },
@@ -36,6 +36,21 @@ const userSchema = mongoose.Schema(
     },
     passwordResetToken: String,
     passwordResetExpires: Date,
+    // Google OAuth fields
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows multiple users without googleId
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
+    },
+    picture: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

@@ -16,7 +16,7 @@ Disallow: /admin/products
 Disallow: /admin/product/new
 Disallow: /admin/product/*/edit
 
-# Sitemap reference
+# Sitemap reference (dynamic sitemap generated from database)
 Sitemap: https://alirwanda.com/sitemap.xml
 
 # Crawl-delay (optional, adjust based on server capacity)

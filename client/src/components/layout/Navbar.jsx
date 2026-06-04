@@ -81,7 +81,7 @@ const Navbar = () => {
               Home
             </Link>
             <Link to="/shop" className="text-gray-700 dark:text-gray-300 hover:text-secondary transition-colors">
-              Shop
+              Products
             </Link>
 
             {/* Dark Mode Toggle */}
@@ -184,7 +184,7 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary"
             >
-              Shop
+              Products
             </Link>
             <button
               onClick={toggleDarkMode}

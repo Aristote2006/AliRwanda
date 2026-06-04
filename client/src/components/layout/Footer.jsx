@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FiMail, FiPhone, FiMapPin, FiFacebook, FiTwitter, FiInstagram } from 'react-icons/fi'
+import { FaTiktok } from "react-icons/fa";
 
 const Footer = () => {
   // ===== LOGO CONFIGURATION =====
@@ -30,15 +31,42 @@ const Footer = () => {
               Your trusted online shopping destination in Rwanda. Quality products, fast delivery, and exceptional customer service.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-secondary transition-colors">
-                <FiFacebook className="w-6 h-6" />
-              </a>
-              <a href="#" className="hover:text-secondary transition-colors">
-                <FiTwitter className="w-6 h-6" />
-              </a>
-              <a href="#" className="hover:text-secondary transition-colors">
-                <FiInstagram className="w-6 h-6" />
-              </a>
+              <a
+  href="https://facebook.com/alirwandaofficial"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-secondary transition-colors"
+>
+  <FiFacebook className="w-6 h-6" />
+</a>
+
+<a
+  href="https://www.tiktok.com/@alirwandaofficial?is_from_webapp=1&sender_device=pc"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-secondary transition-colors"
+>
+  <FaTiktok className="w-6 h-6" />
+</a>
+
+<a
+  href="https://twitter.com/alirwandaofficial"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-secondary transition-colors"
+>
+  <FiTwitter className="w-6 h-6" />
+</a>
+
+<a
+  href="https://www.instagram.com/alirwandaofficial/?__pwa=1#"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="AliRwanda Instagram"
+  className="hover:text-secondary transition-colors"
+>
+  <FiInstagram className="w-6 h-6" />
+</a>
             </div>
           </div>
 
@@ -53,7 +81,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/shop" className="text-gray-300 hover:text-secondary transition-colors">
-                  Shop
+                  Products
                 </Link>
               </li>
               <li>
@@ -69,14 +97,14 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">Customer Service</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-300 hover:text-secondary transition-colors">
+                <Link to="/about" className="text-gray-300 hover:text-secondary transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-secondary transition-colors">
+                <Link to="/contact" className="text-gray-300 hover:text-secondary transition-colors">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-secondary transition-colors">
@@ -110,7 +138,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <FiMail className="w-5 h-5 text-secondary" />
-                <span className="text-gray-300">alirwanda@gmail.com</span>
+                <span className="text-gray-300">alirwandaofficial@gmail.com</span>
               </li>
             </ul>
           </div>
