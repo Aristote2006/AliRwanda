@@ -32,7 +32,7 @@ const corsOptions = {
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
-      'https://alirwanda-gppx.onrender.com',
+      'https://alirwanda.com/',
       'http://localhost:3000',
       'http://localhost:5173',
       process.env.FRONTEND_URL,
