@@ -32,9 +32,10 @@ const corsOptions = {
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
-      'https://alirwanda.com/',
-      'http://localhost:3000',
-      'http://localhost:5173',
+      'https://alirwanda.com',
+  'https://www.alirwanda.com',
+  'http://localhost:3000',
+  'http://localhost:5173',
       process.env.FRONTEND_URL,
       process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : null
     ].filter(Boolean);
