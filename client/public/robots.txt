@@ -1,0 +1,23 @@
+# robots.txt for AliRwanda
+# https://alirwanda.com
+
+User-agent: *
+Allow: /
+
+# Block sensitive and private routes
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+Disallow: /private
+Disallow: /checkout
+
+# Block admin-specific routes
+Disallow: /admin/products
+Disallow: /admin/product/new
+Disallow: /admin/product/*/edit
+
+# Sitemap reference
+Sitemap: https://alirwanda.com/sitemap.xml
+
+# Crawl-delay (optional, adjust based on server capacity)
+# Crawl-delay: 1
