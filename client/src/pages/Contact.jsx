@@ -205,7 +205,7 @@ const Contact = () => {
           <div className="card p-6">
             <h3 className="font-semibold text-primary dark:text-white mb-2">How long does delivery take?</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Delivery typically takes 2-3 business days within Kigali and 3-5 business days for other areas in Rwanda.
+              Delivery typically takes 5-6 hours within Kigali, 1-2 hours in Rubavu, and 6+ hours for other areas in Rwanda. Time varies based on traffic, weather conditions and available branch store in different areas.
             </p>
           </div>
 
@@ -219,7 +219,7 @@ const Contact = () => {
           <div className="card p-6">
             <h3 className="font-semibold text-primary dark:text-white mb-2">Can I return or exchange products?</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Yes, we offer returns and exchanges within 7 days of purchase. The product must be in its original condition.
+              Yes, we offer returns and exchanges within 2 days of purchase. The product must be in its original condition.
             </p>
           </div>
 
