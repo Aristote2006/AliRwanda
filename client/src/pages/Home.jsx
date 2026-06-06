@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowRight, FiStar, FiMail } from 'react-icons/fi'
+import { Helmet } from 'react-helmet-async'
 import ProductCard from '../components/products/ProductCard'
 import { getFeaturedProducts, getTrendingProducts, getCategoriesWithCounts } from '../services/api'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
@@ -74,6 +75,11 @@ const Home = () => {
 
   return (
     <div className="fade-in">
+      <Helmet>
+        <title>AliRwanda - Rwanda's Trusted Online Marketplace</title>
+        <meta name="description" content="Shop electronics, fashion, beauty products, home essentials and more on AliRwanda. Rwanda's trusted online marketplace." />
+        <link rel="canonical" href="https://alirwanda.com/" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary to-gray-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -83,11 +89,11 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="text-center md:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                Browse Products, <br />
-                <span className="text-secondary">Live Better</span>
+                Shop with <br />
+                <span className="text-secondary">Confidence</span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-gray-200">
-                Discover amazing products at unbeatable prices. Rwanda's premier online shopping destination.
+                Quality products, trusted sellers, and exceptional service across Rwanda all at a convinient price.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
                 <Link to="/shop" className="btn-primary text-center">

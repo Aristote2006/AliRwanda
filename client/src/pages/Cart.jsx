@@ -12,7 +12,7 @@ const Cart = () => {
   const total = getCartTotal() + shipping + tax
 
   const handleBuyNowWhatsApp = () => {
-    const phoneNumber = '+250784227283'
+    const phoneNumber = '+250732140720'
     
     let message = "Hello, I'd like to order:\n\n"
     cartItems.forEach((item, index) => {

@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
     e.preventDefault()
     e.stopPropagation()
     
-    const phoneNumber = '+250784227283'
+    const phoneNumber = '+250732140720'
     const message = encodeURIComponent(
       `Hello, I'm interested in buying: ${product.name}\nPrice: RWF ${product.price.toLocaleString()}\nPlease let me know if we can discuss the price. Thank you!`
     )
