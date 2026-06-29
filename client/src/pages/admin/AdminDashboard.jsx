@@ -5,20 +5,26 @@ import {
   FiShoppingBag, FiUsers, FiDollarSign, FiActivity,
   FiPlus, FiEdit2, FiTrash2, FiEye, FiSearch,
   FiMenu, FiX, FiHome, FiSettings, FiBarChart2,
-  FiChevronRight, FiArrowUp, FiArrowDown
+  FiChevronRight, FiArrowUp, FiArrowDown, FiLogOut
 } from 'react-icons/fi'
-import { getProductStats, getCategories } from '../../services/api'
+import { getProductStats, getCategories, getOrders } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import { toast } from 'react-toastify'
 
 const AdminDashboard = () => {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [categories, setCategories] = useState([])
+  const [orderStats, setOrderStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeSection, setActiveSection] = useState('dashboard')
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   useEffect(() => {
     fetchData()
@@ -26,12 +32,26 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [statsData, categoriesData] = await Promise.all([
+      const [statsData, categoriesData, ordersData] = await Promise.all([
         getProductStats(user.token),
-        getCategories()
+        getCategories(),
+        getOrders(user.token)
       ])
       setStats(statsData)
       setCategories(categoriesData)
+      
+      // Calculate order statistics
+      const totalOrders = ordersData?.length || 0
+      const pendingOrders = ordersData?.filter(o => o.status === 'Pending').length || 0
+      const completedOrders = ordersData?.filter(o => o.status === 'Delivered').length || 0
+      const totalRevenue = ordersData?.reduce((sum, order) => sum + (order.totalPrice || 0), 0) || 0
+      
+      setOrderStats({
+        totalOrders,
+        pendingOrders,
+        completedOrders,
+        totalRevenue
+      })
     } catch (error) {
       toast.error('Failed to load dashboard data')
     } finally {
@@ -41,8 +61,10 @@ const AdminDashboard = () => {
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FiHome, path: '/admin' },
+    { id: 'orders', label: 'Orders', icon: FiShoppingBag, path: '/admin/orders' },
     { id: 'products', label: 'Products', icon: FiPackage, path: '/admin/products' },
     { id: 'add-product', label: 'Add Product', icon: FiPlus, path: '/admin/product/new' },
+    { id: 'users', label: 'Users', icon: FiUsers, path: '/admin/users' },
     { id: 'analytics', label: 'Analytics', icon: FiBarChart2, path: '/admin/analytics' },
     { id: 'settings', label: 'Settings', icon: FiSettings, path: '/admin/settings' },
   ]
@@ -82,6 +104,13 @@ const AdminDashboard = () => {
               <FiActivity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               <span className="text-sm font-medium text-blue-700 dark:text-blue-400">System Online</span>
             </div>
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              title="Logout"
+            >
+              <FiLogOut className="w-5 h-5 text-red-600 dark:text-red-400" />
+            </button>
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
               {user?.name?.charAt(0).toUpperCase()}
             </div>
@@ -91,7 +120,7 @@ const AdminDashboard = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-[calc(100vh-73px)] transition-all duration-300 sticky top-[73px]`}>
+        <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-[calc(100vh-73px)] transition-all duration-300 sticky top-[73px] hidden lg:block`}>
           <nav className="p-4 space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon
@@ -114,6 +143,38 @@ const AdminDashboard = () => {
             })}
           </nav>
         </aside>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden" onClick={() => setSidebarOpen(false)}>
+            <aside className="w-64 bg-white dark:bg-gray-800 h-full p-4">
+              <nav className="space-y-2">
+                {navItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = activeSection === item.id
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.path}
+                      onClick={() => {
+                        setActiveSection(item.id)
+                        setSidebarOpen(false)
+                      }}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                        isActive
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-blue-600 dark:text-blue-400' : ''}`} />
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  )
+                })}
+              </nav>
+            </aside>
+          </div>
+        )}
 
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-8">
@@ -145,25 +206,25 @@ const AdminDashboard = () => {
               trendUp={true}
             />
             <StatCard
-              title="Low Stock Alert"
-              value={stats?.lowStock || 0}
+              title="Total Orders"
+              value={orderStats?.totalOrders || 0}
+              icon={FiShoppingBag}
+              color="purple"
+              trend="+18%"
+              trendUp={true}
+            />
+            <StatCard
+              title="Pending Orders"
+              value={orderStats?.pendingOrders || 0}
               icon={FiAlertTriangle}
-              color="red"
+              color="yellow"
               trend="-5%"
               trendUp={false}
             />
             <StatCard
-              title="Featured Products"
-              value={stats?.featured || 0}
-              icon={FiStar}
-              color="yellow"
-              trend="+8%"
-              trendUp={true}
-            />
-            <StatCard
-              title="Trending Now"
-              value={stats?.trending || 0}
-              icon={FiTrendingUp}
+              title="Total Revenue"
+              value={`RWF ${(orderStats?.totalRevenue || 0).toLocaleString()}`}
+              icon={FiDollarSign}
               color="green"
               trend="+24%"
               trendUp={true}
@@ -177,10 +238,10 @@ const AdminDashboard = () => {
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <ActionButton
-                  icon={FiPlus}
-                  title="Add New Product"
-                  description="Create a new product listing"
-                  to="/admin/product/new"
+                  icon={FiShoppingBag}
+                  title="Manage Orders"
+                  description="View and manage customer orders"
+                  to="/admin/orders"
                   color="blue"
                 />
                 <ActionButton
@@ -191,18 +252,18 @@ const AdminDashboard = () => {
                   color="purple"
                 />
                 <ActionButton
+                  icon={FiUsers}
+                  title="Manage Users"
+                  description="View and manage customer accounts"
+                  to="/admin/users"
+                  color="blue"
+                />
+                <ActionButton
                   icon={FiBarChart2}
                   title="View Analytics"
                   description="Check sales and traffic data"
                   to="/admin/analytics"
                   color="green"
-                />
-                <ActionButton
-                  icon={FiSettings}
-                  title="Store Settings"
-                  description="Configure store preferences"
-                  to="/admin/settings"
-                  color="gray"
                 />
               </div>
             </div>
@@ -296,6 +357,7 @@ const StatCard = ({ title, value, icon: Icon, color, trend, trendUp }) => {
     red: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
     yellow: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400',
     green: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+    purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
   }
 
   return (

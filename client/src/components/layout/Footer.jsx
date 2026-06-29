@@ -108,7 +108,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-secondary transition-colors">
-                  Shipping Info
+                  Delivery Info
                 </a>
               </li>
               <li>

@@ -20,17 +20,19 @@ const orderSchema = mongoose.Schema(
         },
       },
     ],
-    shippingAddress: {
-      address: { type: String, required: true },
-      city: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+    deliveryAddress: {
       phone: { type: String, required: true },
+      whatsapp: { type: String, default: '' },
+      country: { type: String, required: true },
+      district: { type: String, required: true },
+      sector: { type: String, required: true },
+      cell: { type: String, required: true },
+      village: { type: String, required: true },
     },
     paymentMethod: {
       type: String,
       required: true,
-      enum: ['COD', 'Flutterwave', 'Mobile Money'],
+      enum: ['MTN Mobile Money', 'Airtel Money', 'Bank Account'],
     },
     paymentResult: {
       id: { type: String },
@@ -43,12 +45,12 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: 0.0,
     },
-    taxPrice: {
+    serviceFee: {
       type: Number,
       required: true,
       default: 0.0,
     },
-    shippingPrice: {
+    deliveryFee: {
       type: Number,
       required: true,
       default: 0.0,
@@ -76,9 +78,16 @@ const orderSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
-      default: 'Processing',
+      enum: ['Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Cancelled'],
+      default: 'Pending',
     },
+    statusHistory: [
+      {
+        status: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now },
+        note: { type: String, default: '' },
+      },
+    ],
   },
   {
     timestamps: true,

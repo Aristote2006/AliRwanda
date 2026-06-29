@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { createOrder } from '../services/api'
+import { getDeliveryFee, getDistricts } from '../utils/deliveryFees'
 import { toast } from 'react-toastify'
 
 const Checkout = () => {
@@ -10,23 +11,26 @@ const Checkout = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
   
-  const [shippingAddress, setShippingAddress] = useState({
-    address: '',
-    city: '',
-    postalCode: '',
-    country: 'Rwanda',
+  const [deliveryAddress, setDeliveryAddress] = useState({
     phone: '',
+    whatsapp: '',
+    country: 'Rwanda',
+    district: '',
+    sector: '',
+    cell: '',
+    village: '',
   })
-  const [paymentMethod, setPaymentMethod] = useState('COD')
+  const [paymentMethod, setPaymentMethod] = useState('Mobile Money')
   const [loading, setLoading] = useState(false)
 
-  const shipping = 10
-  const tax = getCartTotal() * 0.1
-  const total = getCartTotal() + shipping + tax
+  const itemsPrice = getCartTotal()
+  const serviceFee = itemsPrice * 0.03 // 3% service fee
+  const deliveryFee = deliveryAddress.district ? getDeliveryFee(deliveryAddress.district) : 3000
+  const total = itemsPrice + serviceFee + deliveryFee
 
   const handleInputChange = (e) => {
-    setShippingAddress({
-      ...shippingAddress,
+    setDeliveryAddress({
+      ...deliveryAddress,
       [e.target.name]: e.target.value,
     })
   }
@@ -44,11 +48,11 @@ const Checkout = () => {
           image: item.image,
           price: item.price,
         })),
-        shippingAddress,
+        deliveryAddress,
         paymentMethod,
         itemsPrice: getCartTotal(),
-        taxPrice: tax,
-        shippingPrice: shipping,
+        serviceFee: serviceFee,
+        deliveryFee: deliveryFee,
         totalPrice: total,
       }
 
@@ -56,7 +60,7 @@ const Checkout = () => {
       
       toast.success('Order placed successfully!')
       clearCart()
-      navigate(`/order/${order._id}`)
+      navigate('/dashboard/orders')
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to place order')
     } finally {
@@ -79,59 +83,92 @@ const Checkout = () => {
         {/* Checkout Form */}
         <div className="lg:col-span-2">
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Shipping Information */}
+            {/* Delivery Information */}
             <div className="card p-6">
               <h2 className="text-2xl font-bold text-primary dark:text-white mb-6">
-                Shipping Information
+                Delivery Information
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={shippingAddress.address}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={shippingAddress.city}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Postal Code
-                  </label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={shippingAddress.postalCode}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Phone
+                    Phone *
                   </label>
                   <input
                     type="tel"
                     name="phone"
-                    value={shippingAddress.phone}
+                    value={deliveryAddress.phone}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    required
+                    placeholder="+250 7XX XXX XXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    WhatsApp (Optional)
+                  </label>
+                  <input
+                    type="tel"
+                    name="whatsapp"
+                    value={deliveryAddress.whatsapp}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    placeholder="+250 7XX XXX XXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Country *
+                  </label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={deliveryAddress.country}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    District *
+                  </label>
+                  <select
+                    name="district"
+                    value={deliveryAddress.district}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    required
+                  >
+                    <option value="">Select District</option>
+                    {getDistricts().map((district) => (
+                      <option key={district} value={district}>
+                        {district}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Sector *
+                  </label>
+                  <input
+                    type="text"
+                    name="sector"
+                    value={deliveryAddress.sector}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Cell *
+                  </label>
+                  <input
+                    type="text"
+                    name="cell"
+                    value={deliveryAddress.cell}
                     onChange={handleInputChange}
                     className="input-field"
                     required
@@ -139,12 +176,12 @@ const Checkout = () => {
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Country
+                    Village *
                   </label>
                   <input
                     type="text"
-                    name="country"
-                    value={shippingAddress.country}
+                    name="village"
+                    value={deliveryAddress.village}
                     onChange={handleInputChange}
                     className="input-field"
                     required
@@ -163,42 +200,42 @@ const Checkout = () => {
                   <input
                     type="radio"
                     name="payment"
-                    value="COD"
-                    checked={paymentMethod === 'COD'}
+                    value="MTN Mobile Money"
+                    checked={paymentMethod === 'MTN Mobile Money'}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="text-secondary focus:ring-secondary"
                   />
                   <div>
-                    <p className="font-semibold">Cash on Delivery</p>
-                    <p className="text-sm text-gray-500">Pay when you receive</p>
+                    <p className="font-semibold">MTN Mobile Money</p>
+                    <p className="text-sm text-gray-500">Pay with MTN MoMo</p>
                   </div>
                 </label>
                 <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
                   <input
                     type="radio"
                     name="payment"
-                    value="Mobile Money"
-                    checked={paymentMethod === 'Mobile Money'}
+                    value="Airtel Money"
+                    checked={paymentMethod === 'Airtel Money'}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="text-secondary focus:ring-secondary"
                   />
                   <div>
-                    <p className="font-semibold">Mobile Money</p>
-                    <p className="text-sm text-gray-500">MTN, Airtel</p>
+                    <p className="font-semibold">Airtel Money</p>
+                    <p className="text-sm text-gray-500">Pay with Airtel Money</p>
                   </div>
                 </label>
                 <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
                   <input
                     type="radio"
                     name="payment"
-                    value="Flutterwave"
-                    checked={paymentMethod === 'Flutterwave'}
+                    value="Bank Transfer"
+                    checked={paymentMethod === 'Bank Transfer'}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="text-secondary focus:ring-secondary"
                   />
                   <div>
-                    <p className="font-semibold">Credit/Debit Card</p>
-                    <p className="text-sm text-gray-500">Via Flutterwave</p>
+                    <p className="font-semibold">Bank Transfer</p>
+                    <p className="text-sm text-gray-500">Direct bank transfer</p>
                   </div>
                 </label>
               </div>
@@ -209,7 +246,7 @@ const Checkout = () => {
               disabled={loading}
               className="btn-primary w-full text-lg disabled:opacity-50"
             >
-              {loading ? 'Processing...' : `Place Order - $${total.toFixed(2)}`}
+              {loading ? 'Processing...' : `Place Order - RWF ${total.toLocaleString()}`}
             </button>
           </form>
         </div>
@@ -251,13 +288,13 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">
-                  Shipping
+                  Delivery
                 </span>
-                <span className="font-semibold">RWF {shipping.toLocaleString()}</span>
+                <span className="font-semibold">RWF {deliveryFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Tax (10%)</span>
-                <span className="font-semibold">RWF {tax.toLocaleString()}</span>
+                <span className="text-gray-600 dark:text-gray-300">Service Fee (3%)</span>
+                <span className="font-semibold">RWF {serviceFee.toLocaleString()}</span>
               </div>
               <div className="border-t pt-3">
                 <div className="flex justify-between">

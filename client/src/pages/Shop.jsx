@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FiFilter, FiGrid, FiList } from 'react-icons/fi'
+import { Helmet } from 'react-helmet-async'
 import ProductCard from '../components/products/ProductCard'
 import { getProducts, trackSearch, trackCategoryView, trackFilter } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import LoadingSpinner from '../components/ui/LoadingSpinner'
+import { SkeletonCard } from '../components/ui/Skeleton'
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -21,10 +22,13 @@ const Shop = () => {
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
   const [rating, setRating] = useState('')
-  const [sort, setSort] = useState('newest')
+  const [sort, setSort] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [inStock, setInStock] = useState(false)
+  const [featured, setFeatured] = useState(false)
+  const [trending, setTrending] = useState(false)
 
-  const categories = ['All', 'Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty']
+  const categories = ['All', 'Electronics', 'Fashion', 'Home', 'Sports', 'Shoes', 'Beauty']
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -38,6 +42,9 @@ const Shop = () => {
           maxPrice: maxPrice || undefined,
           rating: rating || undefined,
           sort,
+          inStock: inStock || undefined,
+          featured: featured || undefined,
+          trending: trending || undefined,
         }
         
         const data = await getProducts(params)
@@ -61,7 +68,7 @@ const Shop = () => {
     }
 
     fetchProducts()
-  }, [page, category, search, minPrice, maxPrice, rating, sort, user])
+  }, [page, category, search, minPrice, maxPrice, rating, sort, inStock, featured, trending, user])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -94,6 +101,15 @@ const Shop = () => {
       case 'sort':
         setSort(value)
         break
+      case 'inStock':
+        setInStock(value)
+        break
+      case 'featured':
+        setFeatured(value)
+        break
+      case 'trending':
+        setTrending(value)
+        break
       default:
         break
     }
@@ -104,14 +120,22 @@ const Shop = () => {
     setMinPrice('')
     setMaxPrice('')
     setRating('')
-    setSort('newest')
+    setSort('')
     setSearch('')
+    setInStock(false)
+    setFeatured(false)
+    setTrending(false)
     setPage(1)
     setSearchParams({})
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in">
+      <Helmet>
+        <title>All Products | AliRwanda</title>
+        <meta name="description" content="Browse our complete collection of electronics, fashion, beauty products, home essentials and more at AliRwanda. Quality products at great prices." />
+        <link rel="canonical" href="https://alirwanda.com/shop" />
+      </Helmet>
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-primary dark:text-white mb-4">Products</h1>
@@ -235,6 +259,45 @@ const Shop = () => {
                   <option value="2">2★ & above</option>
                 </select>
               </div>
+
+              {/* Stock Status */}
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3">Availability</h4>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={inStock}
+                    onChange={(e) => handleFilterChange('inStock', e.target.checked)}
+                    className="text-secondary focus:ring-secondary"
+                  />
+                  <span>In Stock Only</span>
+                </label>
+              </div>
+
+              {/* Featured */}
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3">Special</h4>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={featured}
+                      onChange={(e) => handleFilterChange('featured', e.target.checked)}
+                      className="text-secondary focus:ring-secondary"
+                    />
+                    <span>Featured</span>
+                  </label>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={trending}
+                      onChange={(e) => handleFilterChange('trending', e.target.checked)}
+                      className="text-secondary focus:ring-secondary"
+                    />
+                    <span>Trending</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </aside>
         )}
@@ -242,7 +305,17 @@ const Shop = () => {
         {/* Products Grid */}
         <div className="flex-1">
           {loading ? (
-            <LoadingSpinner />
+            <div
+              className={`grid gap-6 ${
+                viewMode === 'grid'
+                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                  : 'grid-cols-1'
+              }`}
+            >
+              {[...Array(6)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-2xl text-gray-500">No products found</p>
@@ -269,31 +342,75 @@ const Shop = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex justify-center items-center space-x-2 mt-8">
+                <div className="flex justify-center items-center space-x-1 sm:space-x-2 mt-8">
                   <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
-                    className="btn-secondary disabled:opacity-50"
+                    className="btn-secondary disabled:opacity-50 px-3 py-2 sm:px-4 text-sm sm:text-base"
                   >
                     Previous
                   </button>
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setPage(i + 1)}
-                      className={`px-4 py-2 rounded ${
-                        page === i + 1
-                          ? 'bg-secondary text-white'
-                          : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
+                  {/* Show limited page numbers on mobile */}
+                  <div className="flex space-x-1">
+                    {totalPages <= 7 ? (
+                      // Show all pages if 7 or fewer
+                      [...Array(totalPages)].map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setPage(i + 1)}
+                          className={`px-3 py-2 sm:px-4 rounded text-sm sm:text-base ${
+                            page === i + 1
+                              ? 'bg-secondary text-white'
+                              : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))
+                    ) : (
+                      // Show limited pages on mobile
+                      <>
+                        <button
+                          onClick={() => setPage(1)}
+                          className={`px-3 py-2 sm:px-4 rounded text-sm sm:text-base ${
+                            page === 1
+                              ? 'bg-secondary text-white'
+                              : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          1
+                        </button>
+                        {page > 3 && (
+                          <span className="px-2 py-2 text-gray-500">...</span>
+                        )}
+                        {page > 2 && page < totalPages - 1 && (
+                          <button
+                            onClick={() => setPage(page)}
+                            className="px-3 py-2 sm:px-4 rounded bg-secondary text-white text-sm sm:text-base"
+                          >
+                            {page}
+                          </button>
+                        )}
+                        {page < totalPages - 2 && (
+                          <span className="px-2 py-2 text-gray-500">...</span>
+                        )}
+                        <button
+                          onClick={() => setPage(totalPages)}
+                          className={`px-3 py-2 sm:px-4 rounded text-sm sm:text-base ${
+                            page === totalPages
+                              ? 'bg-secondary text-white'
+                              : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </div>
                   <button
                     onClick={() => setPage(page + 1)}
                     disabled={page === totalPages}
-                    className="btn-secondary disabled:opacity-50"
+                    className="btn-secondary disabled:opacity-50 px-3 py-2 sm:px-4 text-sm sm:text-base"
                   >
                     Next
                   </button>

@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import errorHandler from './middleware/error.js';
+import { initializeScheduler } from './utils/scheduler.js';
 
 // Load env vars
 dotenv.config();
@@ -17,11 +18,17 @@ const __dirname = path.dirname(__filename);
 // Connect to database
 connectDB();
 
+// Initialize product rotation scheduler
+initializeScheduler();
+
 // Route files
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userBehaviorRoutes from './routes/userBehaviorRoutes.js';
+import addressRoutes from './routes/addressRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 import { generateSitemap } from './controllers/productController.js';
 
 const app = express();
@@ -70,6 +77,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/user', userBehaviorRoutes);
+app.use('/api/addresses', addressRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FiMail, FiPhone, FiMapPin, FiSend, FiFacebook, FiTwitter, FiInstagram } from 'react-icons/fi'
+import { Helmet } from 'react-helmet-async'
 import { toast } from 'react-toastify'
 
 const Contact = () => {
@@ -26,6 +27,11 @@ const Contact = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 fade-in">
+      <Helmet>
+        <title>Contact Us | AliRwanda</title>
+        <meta name="description" content="Get in touch with AliRwanda customer support. We're here to help with your orders, questions, and feedback. Contact us today." />
+        <link rel="canonical" href="https://alirwanda.com/contact" />
+      </Helmet>
       {/* Header */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold text-primary dark:text-white mb-4">

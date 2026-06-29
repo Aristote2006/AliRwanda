@@ -123,6 +123,14 @@ const getUserProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        phone: user.phone || '',
+        whatsapp: user.whatsapp || '',
+        country: user.country || 'Rwanda',
+        district: user.district || '',
+        sector: user.sector || '',
+        cell: user.cell || '',
+        village: user.village || '',
+        picture: user.picture || '',
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -142,6 +150,16 @@ const updateUserProfile = async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+
+      // Address and contact fields
+      user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
+      user.whatsapp = req.body.whatsapp !== undefined ? req.body.whatsapp : user.whatsapp;
+      user.country = req.body.country || user.country;
+      user.district = req.body.district !== undefined ? req.body.district : user.district;
+      user.sector = req.body.sector !== undefined ? req.body.sector : user.sector;
+      user.cell = req.body.cell !== undefined ? req.body.cell : user.cell;
+      user.village = req.body.village !== undefined ? req.body.village : user.village;
+      user.picture = req.body.picture !== undefined ? req.body.picture : user.picture;
 
       // SECURITY: Only update password if provided
       if (req.body.password) {
@@ -163,6 +181,14 @@ const updateUserProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        phone: updatedUser.phone || '',
+        whatsapp: updatedUser.whatsapp || '',
+        country: updatedUser.country || 'Rwanda',
+        district: updatedUser.district || '',
+        sector: updatedUser.sector || '',
+        cell: updatedUser.cell || '',
+        village: updatedUser.village || '',
+        picture: updatedUser.picture || '',
         token: generateToken(updatedUser._id, updatedUser.role),
       });
     } else {

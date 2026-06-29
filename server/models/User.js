@@ -51,6 +51,36 @@ const userSchema = mongoose.Schema(
       type: String,
       default: '',
     },
+    // Contact Information
+    phone: {
+      type: String,
+      default: '',
+    },
+    whatsapp: {
+      type: String,
+      default: '',
+    },
+    // Address Information
+    country: {
+      type: String,
+      default: 'Rwanda',
+    },
+    district: {
+      type: String,
+      default: '',
+    },
+    sector: {
+      type: String,
+      default: '',
+    },
+    cell: {
+      type: String,
+      default: '',
+    },
+    village: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

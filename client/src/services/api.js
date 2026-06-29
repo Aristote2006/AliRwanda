@@ -140,6 +140,199 @@ export const getMyOrders = async (token) => {
   return data
 }
 
+export const getOrders = async (token) => {
+  const { data } = await apiClient.get('/orders', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const getOrderById = async (id, token) => {
+  const { data } = await apiClient.get(`/orders/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const updateOrderStatus = async (id, statusData, token) => {
+  const { data } = await apiClient.put(`/orders/${id}/status`, statusData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+// Addresses API
+export const getAddresses = async (token) => {
+  const { data } = await apiClient.get('/addresses', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const getAddressById = async (id, token) => {
+  const { data } = await apiClient.get(`/addresses/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const createAddress = async (addressData, token) => {
+  const { data } = await apiClient.post('/addresses', addressData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const updateAddress = async (id, addressData, token) => {
+  const { data } = await apiClient.put(`/addresses/${id}`, addressData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const deleteAddress = async (id, token) => {
+  const { data } = await apiClient.delete(`/addresses/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const setDefaultAddress = async (id, token) => {
+  const { data } = await apiClient.put(`/addresses/${id}/default`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+// Wishlist API
+export const getWishlist = async (token) => {
+  const { data } = await apiClient.get('/wishlist', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const addToWishlist = async (productId, token) => {
+  const { data } = await apiClient.post('/wishlist', { productId }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const removeFromWishlist = async (productId, token) => {
+  const { data } = await apiClient.delete(`/wishlist/${productId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const checkInWishlist = async (productId, token) => {
+  const { data } = await apiClient.get(`/wishlist/check/${productId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const clearWishlist = async (token) => {
+  const { data } = await apiClient.delete('/wishlist', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+// Notifications API
+export const getNotifications = async (token) => {
+  const { data } = await apiClient.get('/notifications', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const getUnreadCount = async (token) => {
+  const { data } = await apiClient.get('/notifications/unread-count', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const markAsRead = async (id, token) => {
+  const { data } = await apiClient.put(`/notifications/${id}/read`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const markAllAsRead = async (token) => {
+  const { data } = await apiClient.put('/notifications/mark-all-read', {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const deleteNotification = async (id, token) => {
+  const { data } = await apiClient.delete(`/notifications/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+// User Profile API
+export const updateUserProfile = async (userData, token) => {
+  const { data } = await apiClient.put('/users/profile', userData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
+export const changePassword = async (passwordData, token) => {
+  const { data } = await apiClient.put('/users/change-password', passwordData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
 // Admin Products API
 export const createProduct = async (productData, token) => {
   const { data } = await apiClient.post('/products', productData, {

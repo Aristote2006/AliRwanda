@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
+import { Helmet } from 'react-helmet-async'
 import { useAuth } from '../context/AuthContext'
 import { GoogleLogin } from '@react-oauth/google'
 import { FcGoogle } from 'react-icons/fc'
@@ -22,7 +23,7 @@ const Login = () => {
       if (user.role === 'admin') {
         navigate('/admin', { replace: true })
       } else {
-        navigate('/', { replace: true })
+        navigate('/dashboard', { replace: true })
       }
     }
   }, [user, navigate])
@@ -96,6 +97,11 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Login | AliRwanda</title>
+        <meta name="description" content="Sign in to your AliRwanda account to access your orders, wishlist, and personalized shopping experience." />
+        <link rel="canonical" href="https://alirwanda.com/login" />
+      </Helmet>
       <div className="max-w-md w-full">
         <div className="card p-8">
           <div className="text-center mb-8">

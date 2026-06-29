@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FiEdit2, FiTrash2, FiSearch, FiPlus } from 'react-icons/fi'
+import { FiEdit2, FiTrash2, FiSearch, FiPlus, FiArrowLeft } from 'react-icons/fi'
 import { getProducts, deleteProduct, getCategories } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import { toast } from 'react-toastify'
@@ -70,8 +70,23 @@ const ProductManagement = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Mobile Navigation Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 lg:hidden">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <Link
+              to="/admin"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <FiArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            </Link>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Products</h1>
+          </div>
+        </div>
+      </header>
+
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>

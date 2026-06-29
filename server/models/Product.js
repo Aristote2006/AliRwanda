@@ -29,7 +29,7 @@ const productSchema = mongoose.Schema(
     category: {
       type: String,
       required: [true, 'Please add a category'],
-      enum: ['Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty'],
+      enum: ['Electronics', 'Fashion', 'Home', 'Sports', 'Shoes', 'Beauty'],
     },
     rating: {
       type: Number,

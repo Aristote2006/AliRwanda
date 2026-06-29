@@ -9,7 +9,7 @@ const getProducts = async (req, res) => {
     const pageSize = 12;
     const page = Number(req.query.pageNumber) || 1;
 
-    const { category, search, minPrice, maxPrice, rating, sort } = req.query;
+    const { category, search, minPrice, maxPrice, rating, sort, inStock, featured, trending } = req.query;
 
     // Build query
     let query = {};
@@ -32,23 +32,37 @@ const getProducts = async (req, res) => {
       query.rating = { $gte: Number(rating) };
     }
 
+    if (inStock === 'true' || inStock === true) {
+      query.countInStock = { $gt: 0 };
+    }
+
+    if (featured === 'true' || featured === true) {
+      query.isFeatured = true;
+    }
+
+    if (trending === 'true' || trending === true) {
+      query.isTrending = true;
+    }
+
     // Sort options
     let sortOption = {};
-    switch (sort) {
-      case 'price_asc':
-        sortOption = { price: 1 };
-        break;
-      case 'price_desc':
-        sortOption = { price: -1 };
-        break;
-      case 'rating':
-        sortOption = { rating: -1 };
-        break;
-      case 'newest':
-        sortOption = { createdAt: -1 };
-        break;
-      default:
-        sortOption = { createdAt: -1 };
+    if (sort) {
+      switch (sort) {
+        case 'price_asc':
+          sortOption = { price: 1 };
+          break;
+        case 'price_desc':
+          sortOption = { price: -1 };
+          break;
+        case 'rating':
+          sortOption = { rating: -1 };
+          break;
+        case 'newest':
+          sortOption = { createdAt: -1 };
+          break;
+        default:
+          sortOption = {};
+      }
     }
 
     const count = await Product.countDocuments(query);
@@ -257,7 +271,7 @@ const getRelatedProducts = async (req, res) => {
 const getCategories = async (req, res) => {
   try {
     // Return all categories from the schema enum, not just distinct ones
-    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty'];
+    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Shoes', 'Beauty'];
     res.json(allCategories);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -301,11 +315,11 @@ const getCategoriesWithCounts = async (req, res) => {
       'Fashion': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400',
       'Home': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400',
       'Sports': 'https://i.imgur.com/KehR0BA.jpeg',
-      'Books': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400',
+      'Shoes': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
       'Beauty': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400',
     };
 
-    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Books', 'Beauty'];
+    const allCategories = ['Electronics', 'Fashion', 'Home', 'Sports', 'Shoes', 'Beauty'];
     const categoryStats = await Product.aggregate([
       { $group: { _id: '$category', count: { $sum: 1 } } }
     ]);

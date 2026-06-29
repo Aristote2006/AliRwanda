@@ -2,14 +2,17 @@ import { Link } from 'react-router-dom'
 import { FiTrash2, FiMinus, FiPlus, FiShoppingCart, FiMessageCircle } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
+import { getDeliveryFee } from '../utils/deliveryFees'
+import { SkeletonCard } from '../components/ui/Skeleton'
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart()
   const { user } = useAuth()
 
-  const shipping = cartItems.length > 0 ? 10 : 0
-  const tax = getCartTotal() * 0.1
-  const total = getCartTotal() + shipping + tax
+  const itemsPrice = getCartTotal()
+  const serviceFee = itemsPrice * 0.03 // 3% service fee
+  const deliveryFee = cartItems.length > 0 ? 3000 : 0 // Default fee - will be calculated based on district at checkout
+  const total = itemsPrice + serviceFee + deliveryFee
 
   const handleBuyNowWhatsApp = () => {
     const phoneNumber = '+250732140720'
@@ -19,9 +22,9 @@ const Cart = () => {
       message += `${index + 1}. ${item.name} x${item.qty} - RWF ${(item.price * item.qty).toLocaleString()}\n`
     })
     
-    message += `\nSubtotal: RWF ${getCartTotal().toLocaleString()}`
-    message += `\nShipping: RWF ${shipping.toLocaleString()}`
-    message += `\nTax (10%): RWF ${tax.toLocaleString()}`
+    message += `\nSubtotal: RWF ${itemsPrice.toLocaleString()}`
+    message += `\nService Fee (3%): RWF ${serviceFee.toLocaleString()}`
+    message += `\nDelivery Fee: RWF ${deliveryFee.toLocaleString()}`
     message += `\nTotal: RWF ${total.toLocaleString()}`
     message += `\n\nPlease confirm availability and delivery details. Thank you!`
     
@@ -123,18 +126,20 @@ const Cart = () => {
                   Subtotal
                 </span>
                 <span className="font-semibold">
-                  RWF {getCartTotal().toLocaleString()}
+                  RWF {itemsPrice.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">
-                  Shipping
+                  Service Fee (3%)
                 </span>
-                <span className="font-semibold">RWF {shipping.toLocaleString()}</span>
+                <span className="font-semibold">RWF {serviceFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Tax (10%)</span>
-                <span className="font-semibold">RWF {tax.toLocaleString()}</span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  Delivery Fee
+                </span>
+                <span className="font-semibold">RWF {deliveryFee.toLocaleString()}</span>
               </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between">

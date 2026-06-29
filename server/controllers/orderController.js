@@ -7,11 +7,11 @@ const addOrderItems = async (req, res) => {
   try {
     const {
       orderItems,
-      shippingAddress,
+      deliveryAddress,
       paymentMethod,
       itemsPrice,
-      taxPrice,
-      shippingPrice,
+      serviceFee,
+      deliveryFee,
       totalPrice,
     } = req.body;
 
@@ -22,12 +22,19 @@ const addOrderItems = async (req, res) => {
       const order = new Order({
         orderItems,
         user: req.user._id,
-        shippingAddress,
+        deliveryAddress,
         paymentMethod,
         itemsPrice,
-        taxPrice,
-        shippingPrice,
+        serviceFee,
+        deliveryFee,
         totalPrice,
+        statusHistory: [
+          {
+            status: 'Pending',
+            timestamp: Date.now(),
+            note: 'Order placed successfully',
+          },
+        ],
       });
 
       const createdOrder = await order.save();
@@ -96,6 +103,53 @@ const updateOrderToDelivered = async (req, res) => {
       order.isDelivered = true;
       order.deliveredAt = Date.now();
       order.status = 'Delivered';
+      
+      // Add to status history
+      order.statusHistory.push({
+        status: 'Delivered',
+        timestamp: Date.now(),
+        note: 'Order delivered successfully',
+      });
+
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update order status
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      const validStatuses = ['Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Cancelled'];
+      
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status' });
+      }
+
+      order.status = status;
+      
+      // Update isDelivered if status is Delivered
+      if (status === 'Delivered') {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+      }
+
+      // Add to status history
+      order.statusHistory.push({
+        status,
+        timestamp: Date.now(),
+        note: `Order status updated to ${status}`,
+      });
 
       const updatedOrder = await order.save();
       res.json(updatedOrder);
@@ -136,6 +190,7 @@ export {
   getOrderById,
   updateOrderToPaid,
   updateOrderToDelivered,
+  updateOrderStatus,
   getMyOrders,
   getOrders,
 };
