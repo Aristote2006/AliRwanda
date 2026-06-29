@@ -333,6 +333,17 @@ export const changePassword = async (passwordData, token) => {
   return data
 }
 
+// Password Reset API
+export const forgotPassword = async (email) => {
+  const { data } = await apiClient.post('/users/forgot-password', { email })
+  return data
+}
+
+export const resetPassword = async (token, passwordData) => {
+  const { data } = await apiClient.post(`/users/reset-password/${token}`, passwordData)
+  return data
+}
+
 // Admin Products API
 export const createProduct = async (productData, token) => {
   const { data } = await apiClient.post('/products', productData, {

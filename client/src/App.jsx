@@ -15,6 +15,8 @@ import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import PrivateRoute from './components/common/PrivateRoute'
@@ -69,6 +71,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route

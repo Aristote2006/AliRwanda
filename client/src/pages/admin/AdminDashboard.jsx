@@ -67,6 +67,7 @@ const AdminDashboard = () => {
     { id: 'users', label: 'Users', icon: FiUsers, path: '/admin/users' },
     { id: 'analytics', label: 'Analytics', icon: FiBarChart2, path: '/admin/analytics' },
     { id: 'settings', label: 'Settings', icon: FiSettings, path: '/admin/settings' },
+    { id: 'logout', label: 'Logout', icon: FiLogOut, action: handleLogout },
   ]
 
   if (loading) {
@@ -125,6 +126,20 @@ const AdminDashboard = () => {
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = activeSection === item.id
+              if (item.action) {
+                return (
+                  <button
+                    key={item.id}
+                    onClick={item.action}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 w-full text-left ${
+                      'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    {sidebarOpen && <span className="font-medium">{item.label}</span>}
+                  </button>
+                )
+              }
               return (
                 <Link
                   key={item.id}
@@ -152,6 +167,23 @@ const AdminDashboard = () => {
                 {navItems.map((item) => {
                   const Icon = item.icon
                   const isActive = activeSection === item.id
+                  if (item.action) {
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          item.action()
+                          setSidebarOpen(false)
+                        }}
+                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 w-full text-left ${
+                          'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <span className="font-medium">{item.label}</span>
+                      </button>
+                    )
+                  }
                   return (
                     <Link
                       key={item.id}

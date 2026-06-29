@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FiHome, FiGrid, FiShoppingBag, FiHeart, FiMapPin, FiBell, FiSettings, FiLogOut, FiMenu, FiX } from 'react-icons/fi'
+import { useAuth } from '../../context/AuthContext'
 
 const DashboardSidebar = ({ isOpen, onClose }) => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
   
   const menuItems = [
     { icon: FiHome, label: 'Dashboard', path: '/dashboard' },
@@ -16,6 +19,12 @@ const DashboardSidebar = ({ isOpen, onClose }) => {
   ]
 
   const isActive = (path) => location.pathname === path
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+    onClose()
+  }
 
   return (
     <>
@@ -78,13 +87,13 @@ const DashboardSidebar = ({ isOpen, onClose }) => {
 
           {/* Logout */}
           <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <Link
-              to="/"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200 w-full"
             >
               <FiLogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
